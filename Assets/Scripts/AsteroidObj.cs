@@ -12,5 +12,10 @@ public class AsteroidObj : MonoBehaviour
         if (other.gameObject.CompareTag("Bullet")) {
             asteroid.BulletDamage();
         }
+        if (other.gameObject.CompareTag("Ship")) {
+            Debug.Log(other.gameObject);
+            other.gameObject.SendMessageUpwards("TakeDamage");
+            asteroid.BulletDamage();
+        }
     }
 }

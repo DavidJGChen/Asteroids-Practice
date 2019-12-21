@@ -16,6 +16,8 @@ public class Player : WrapAround
     public float rotateSpeed = 360f;
     public float timeToAccel = 1f;
     private bool inControl;
+    public int health = 5;
+    public float owieTimer;
 
     protected override void OnAwake() {}
     protected override void OnStart() {
@@ -40,6 +42,16 @@ public class Player : WrapAround
     // Update is called once per frame
     protected override void OnFixedUpdate()
     {
+        if (health <=0) {
+            DestroyAll();
+            Destroy(gameObject);
+        }
+        if (owieTimer > 0) {
+            owieTimer -= Time.deltaTime;
+        }
+        else {
+            currObject.GetComponent<SpriteRenderer>().color = Color.white;
+        }
         Vector2 targetVelocity = currObject.up * moveSpeed * thrust;
         rb2D.velocity = Vector2.SmoothDamp(rb2D.velocity, targetVelocity, ref velocitySmoothing, timeToAccel);
         currObject.Rotate(0f, 0f, -1 * rotateAmount * rotateSpeed * Time.deltaTime);
@@ -50,6 +62,14 @@ public class Player : WrapAround
             rb2D.angularDrag = 0.4f;
         }
         if (Mathf.Abs(rb2D.angularVelocity) < 0.5) rb2D.angularVelocity = 0;
+    }
+
+    private void TakeDamage() {
+        if (owieTimer <= 0){
+            health--;
+            currObject.GetComponent<SpriteRenderer>().color = Color.red;
+            owieTimer = 2f;
+        }
     }
 }
 }
