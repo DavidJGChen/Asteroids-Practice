@@ -6,6 +6,7 @@ public class Game : MonoBehaviour
 {
     float newAsteroidTime = 5f;
     float timer;
+    int numAsteroids = 5;
     public GameObject asteroid;
     // Start is called before the first frame update
     void Start()
@@ -20,8 +21,15 @@ public class Game : MonoBehaviour
             timer -= Time.deltaTime;
         }
         else {
-            Instantiate(asteroid, transform);
-            timer = newAsteroidTime;
+            if (numAsteroids > 0) {
+                Instantiate(asteroid, transform);
+                timer = newAsteroidTime;
+                numAsteroids--;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Scene1");
         }
     }
 }

@@ -16,6 +16,8 @@ public class Player : WrapAround
     public float rotateSpeed = 360f;
     public float timeToAccel = 1f;
     private bool inControl;
+
+    protected override void OnAwake() {}
     protected override void OnStart() {
         PositionGhosts();
         rb2D = currObject.GetComponent<Rigidbody2D>();

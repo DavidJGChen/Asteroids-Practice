@@ -9,6 +9,7 @@ public class Bullet : WrapAround
     public float moveSpeed = 20f;
     private float timeToDeath = 0.5f;
 
+    protected override void OnAwake() {}
     protected override void OnStart() {
         PositionGhosts();
         rb2D = currObject.GetComponent<Rigidbody2D>();

@@ -4,11 +4,10 @@ using UnityEngine;
 
 public abstract class WrapAround : MonoBehaviour
 {
-    private GameObject obj;
-    public GameObject[] objArr;
-    protected Transform currObject;
-    // protected GameObject[] clones; // Clockwise starting from upper left
-    protected Transform[] ghosts;
+    private GameObject obj; // Prefab to clone
+    public GameObject[] objArr; // Set of Prefabs to clone-- chosen randomly
+    protected Transform currObject; // The only actual object
+    protected Transform[] ghosts; // Ghosts
 
     private float screenWidth;
     private float screenHeight;
@@ -16,10 +15,12 @@ public abstract class WrapAround : MonoBehaviour
     private bool revealed = true;
     private float bufferVal = 1f;
 
-    void Awake()
-    {
-        obj = objArr[Random.Range(0,objArr.Length)];
-        currObject = Instantiate(obj, transform).transform;
+    #region Initialization
+    protected abstract void OnAwake();
+    protected abstract void OnStart();
+    void Awake() {
+        // Pick and instantiate a random object
+
         var cam = Camera.main;
  
         var screenBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, transform.position.z));
@@ -29,38 +30,36 @@ public abstract class WrapAround : MonoBehaviour
         screenHeight = screenTopRight.y - screenBottomLeft.y + bufferVal;
 
         ghosts = new Transform[8];
+        OnAwake();
     }
 
     private void Start() {
+        obj = objArr[Random.Range(0,objArr.Length)];
+        currObject = Instantiate(obj, transform).transform;
         CreateGhosts();
         OnStart();
     }
 
-    protected void CreateGhosts()
-    {
-        for(int i = 0; i < 8; i++)
-        {
+    private void CreateGhosts() {
+        for(int i = 0; i < 8; i++) {
             ghosts[i] = Instantiate(obj, Vector3.zero, Quaternion.identity).transform;
-            ghosts[i].parent = transform;
-            DestroyImmediate(ghosts[i].GetComponent<WrapAround>());
+            ghosts[i].parent = this.transform;
+            Destroy(ghosts[i].GetComponent<Rigidbody2D>());
+            Destroy(ghosts[i].GetComponent<Collider2D>());
         }
-
         PositionGhosts();
     }
+    #endregion
 
-    protected void PositionGhosts()
-    {
-        // All ghost positions will be relative to the ships (this) transform,
-        // so let's star with that.
+    protected void PositionGhosts() {
         var ghostPosition = currObject.position;
-    
-        // We're positioning the ghosts clockwise behind the edges of the screen.
-        // Let's start with the far right.
+
+        // Right
         ghostPosition.x = currObject.position.x + screenWidth;
         ghostPosition.y = currObject.position.y;
         ghosts[0].position = ghostPosition;
     
-        // Bottom-right
+        // Bottom Right
         ghostPosition.x = currObject.position.x + screenWidth;
         ghostPosition.y = currObject.position.y - screenHeight;
         ghosts[1].position = ghostPosition;
@@ -70,7 +69,7 @@ public abstract class WrapAround : MonoBehaviour
         ghostPosition.y = currObject.position.y - screenHeight;
         ghosts[2].position = ghostPosition;
     
-        // Bottom-left
+        // Bottom Left
         ghostPosition.x = currObject.position.x - screenWidth;
         ghostPosition.y = currObject.position.y - screenHeight;
         ghosts[3].position = ghostPosition;
@@ -80,7 +79,7 @@ public abstract class WrapAround : MonoBehaviour
         ghostPosition.y = currObject.position.y;
         ghosts[4].position = ghostPosition;
     
-        // Top-left
+        // Top Left
         ghostPosition.x = currObject.position.x - screenWidth;
         ghostPosition.y = currObject.position.y + screenHeight;
         ghosts[5].position = ghostPosition;
@@ -90,7 +89,7 @@ public abstract class WrapAround : MonoBehaviour
         ghostPosition.y = currObject.position.y + screenHeight;
         ghosts[6].position = ghostPosition;
     
-        // Top-right
+        // Top Right
         ghostPosition.x = currObject.position.x + screenWidth;
         ghostPosition.y = currObject.position.y + screenHeight;
         ghosts[7].position = ghostPosition;
@@ -102,53 +101,47 @@ public abstract class WrapAround : MonoBehaviour
         }
     }
 
-    protected void SwapGhosts()
-    {
-        foreach(var ghost in ghosts)
-        {
-            if (ghost.position.x < screenWidth / 2 && ghost.position.x > -screenWidth / 2 &&
-                ghost.position.y < screenHeight / 2 && ghost.position.y > -screenHeight / 2)
-            {
+    private void SwapGhosts() {
+        for(int i = 0; i < 8; i++) {
+            var ghost = ghosts[i];
+
+            if (ghost.position.x < screenWidth / 2 &&
+                ghost.position.x > -screenWidth / 2 &&
+                ghost.position.y < screenHeight / 2 &&
+                ghost.position.y > -screenHeight / 2) {
+                
                 currObject.position = ghost.position;
 
-                if (!revealed) {
-                    Debug.Log("REVEALLL");
-                    Revealed(true);
-                }
-                // Debug.Log("THIS IS WEIRD");
+                if (!revealed) SetReveal(true);
+
+                PositionGhosts();
     
                 break;
             }
         }
-    
-        PositionGhosts();
     }
+    protected abstract void OnUpdate();
+    protected abstract void OnFixedUpdate();
 
     void Update() {
         OnUpdate();
     }
 
     void FixedUpdate() {
-        OnFixedUpdate();
+        PositionGhosts();
         SwapGhosts();
+        OnFixedUpdate();
     }
 
     protected void DestroyAll() {
-        for (int i = 0; i < 8; i++)
-        {
+        for (int i = 0; i < 8; i++) {
             Destroy(ghosts[i].gameObject);
         }
     }
 
-    protected void Revealed(bool yes) {
-        revealed = yes;
-        currObject.GetComponent<SpriteRenderer>().enabled = yes;
-        currObject.GetComponent<Collider2D>().enabled = yes;
-        Debug.Log("weehaw");
+    protected void SetReveal(bool value) {
+        revealed = value;
+        currObject.GetComponent<SpriteRenderer>().enabled = value;
+        currObject.GetComponent<Collider2D>().enabled = value;
     }
-
-    protected abstract void OnStart();
-    protected abstract void OnUpdate();
-    protected abstract void OnFixedUpdate();
-
 }
