@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2591421000163861292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2591421000163861291}
+  - component: {fileID: 2591421000163861290}
+  m_Layer: 0
+  m_Name: Asteroid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2591421000163861291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2591421000163861292}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.85, y: 0.83, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2591421000163861290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2591421000163861292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5437dbc2d29a240d0b8e5ddee49fa7d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objArr:
+  - {fileID: 8839323836761538981, guid: 681e1862735e24d01ac39666f986913a, type: 3}
+  - {fileID: 282306141563715683, guid: ab8ff520a500b470da3ade8569d40e34, type: 3}
+  - {fileID: 7086617804678784958, guid: d2dece411a77641288f5f8472d04e3f2, type: 3}
+  - {fileID: 3367681943548853168, guid: dc0292d8fe1ba4e4897d0772e64be71c, type: 3}
+  - {fileID: 731452918095988470, guid: 85bcf32bfb37c4507a7e43bb3d37aaae, type: 3}
+  - {fileID: 759290410412134096, guid: a846e924326294acc9347ac41000ce2d, type: 3}
+  - {fileID: 5384101039521760776, guid: f55add43513c44fa7b1517ab241fcc55, type: 3}
+  - {fileID: 5291456283338996901, guid: 28506f1ac26074c46be31817782ef764, type: 3}
+  - {fileID: 2854059880812290158, guid: 2709f3f007c4c491ea263a4f39ae3f4c, type: 3}
+  - {fileID: 4697014081519007451, guid: 3de6f1f31aa3f497f970c7458fa8fc85, type: 3}
+  - {fileID: 8663901606204883529, guid: e98a8ec71a80e42fda00d45c1e608d29, type: 3}
+  - {fileID: 4485685024091941991, guid: 7a97cd6bc809f48e8937a3623091c0eb, type: 3}
+  moveSpeed: 100
