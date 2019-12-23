@@ -13,16 +13,20 @@ public class Player1 : MonoBehaviour
     private float rotateAmount;
     private float thrust;
     public float moveSpeed = 8f;
+    public float fireForce = 20f;
     public float rotateSpeed = 360f;
     public float timeToAccel = 1f;
     private bool inControl;
     public int health = 5;
     public float owieTimer;
 
-    private void Start() {
+    private void Awake() {
         wrapAround = GetComponent<WrapAround1>();
         wrapAround.CreateGhosts();
         rb2D = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start() {
         rotateAmount = 0f;
         thrust = 0f;
     }
@@ -35,10 +39,12 @@ public class Player1 : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space)) {
             var bullet = ObjectPooler.SharedInstance.GetPooledObject("Bullet");
-            bullet.transform.position = this.transform.position + this.transform.up * 0.25f;
+            var bulletSpawn = this.transform.position + this.transform.up * 0.25f;
+            bullet.transform.position = bulletSpawn;
             bullet.transform.rotation = Quaternion.identity;
-            bullet.GetComponent<Bullet1>().Direction = this.transform.up;
             bullet.SetActive(true);
+
+            bullet.GetComponent<Rigidbody2D>().AddForce(this.transform.up * fireForce, ForceMode2D.Impulse);
         }
     }
 

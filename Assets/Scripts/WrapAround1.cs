@@ -41,16 +41,18 @@ public class WrapAround1 : MonoBehaviour {
         PositionGhosts();
     }
     public void CreateGhosts() {
+        var container = GhostContainer.SharedInstance;
         for(int i = 0; i < 8; i++) {
             var obj = Instantiate(ghostPrefab, Vector3.zero, Quaternion.identity);
             ghostTransforms[i] = obj.transform;
-            ghostTransforms[i].parent = this.transform;
+            ghostTransforms[i].parent = container.transform;
             ghostRenderers[i] = obj.GetComponent<SpriteRenderer>();
         }
         PositionGhosts();
         UpdateSprites();
     }
     public void DestroyGhosts() {
+        Debug.Log("destroy ghosts called");
         for (int i = 0; i < 8; i++) {
             Destroy(ghostTransforms[i].gameObject);
         }
@@ -128,6 +130,17 @@ public class WrapAround1 : MonoBehaviour {
         for(int i = 0; i < 8; i++) {
             ghostRenderers[i].sprite = spriteRenderer.sprite;
             ghostRenderers[i].color = spriteRenderer.color;
+        }
+    }
+
+    private void OnDisable() {
+        for (int i = 0; i < 8; i++) {
+            ghostTransforms[i].gameObject.SetActive(false);
+        }
+    }
+    private void OnEnable() {
+        for (int i = 0; i < 8; i++) {
+            ghostTransforms[i].gameObject.SetActive(true);
         }
     }
 }
