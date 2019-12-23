@@ -12,12 +12,11 @@ public class WrapAround1 : MonoBehaviour {
 
     private Transform[] ghostTransforms;
     private SpriteRenderer[] ghostRenderers;
-    private bool ghostsCreated;
+    private bool ghostsCreated = false;
     private void Awake() {
         ghostTransforms = new Transform[8];
         ghostRenderers = new SpriteRenderer[8];
         spriteRenderer = GetComponent<SpriteRenderer>();
-        ghostsCreated = false;
     }
     private void Start() {
         RecalculateCameraBounds();    
@@ -50,6 +49,9 @@ public class WrapAround1 : MonoBehaviour {
             ghostTransforms[i].parent = container.transform;
             ghostRenderers[i] = obj.GetComponent<SpriteRenderer>();
         }
+
+        ghostsCreated = true;
+
         PositionGhosts();
         UpdateSprites();
     }
@@ -59,6 +61,8 @@ public class WrapAround1 : MonoBehaviour {
         for (int i = 0; i < 8; i++) {
             Destroy(ghostTransforms[i].gameObject);
         }
+
+        ghostsCreated = false;
     }
     #endregion
 
@@ -146,7 +150,8 @@ public class WrapAround1 : MonoBehaviour {
         if (!ghostsCreated) return;
 
         for (int i = 0; i < 8; i++) {
-            ghostTransforms[i].gameObject.SetActive(false);
+            if (ghostTransforms[i] != null)
+                ghostTransforms[i].gameObject.SetActive(false);
         }
     }
     private void OnEnable() {

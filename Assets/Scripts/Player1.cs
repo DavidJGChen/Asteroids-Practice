@@ -22,11 +22,11 @@ public class Player1 : MonoBehaviour
 
     private void Awake() {
         wrapAround = GetComponent<WrapAround1>();
-        wrapAround.CreateGhosts();
         rb2D = GetComponent<Rigidbody2D>();
     }
 
     private void Start() {
+        wrapAround.CreateGhosts();
         rotateAmount = 0f;
         thrust = 0f;
     }
