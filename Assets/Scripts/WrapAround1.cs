@@ -12,10 +12,12 @@ public class WrapAround1 : MonoBehaviour {
 
     private Transform[] ghostTransforms;
     private SpriteRenderer[] ghostRenderers;
+    private bool ghostsCreated;
     private void Awake() {
         ghostTransforms = new Transform[8];
         ghostRenderers = new SpriteRenderer[8];
         spriteRenderer = GetComponent<SpriteRenderer>();
+        ghostsCreated = false;
     }
     private void Start() {
         RecalculateCameraBounds();    
@@ -52,7 +54,8 @@ public class WrapAround1 : MonoBehaviour {
         UpdateSprites();
     }
     public void DestroyGhosts() {
-        Debug.Log("destroy ghosts called");
+        if (!ghostsCreated) return;
+
         for (int i = 0; i < 8; i++) {
             Destroy(ghostTransforms[i].gameObject);
         }
@@ -60,6 +63,8 @@ public class WrapAround1 : MonoBehaviour {
     #endregion
 
     private void PositionGhosts() {
+        if (!ghostsCreated) return;
+
         var ghostPosition = this.transform.position;
 
         // Right
@@ -109,6 +114,8 @@ public class WrapAround1 : MonoBehaviour {
     }
 
     private void SwapPositions() {
+        if (!ghostsCreated) return;
+
         for(int i = 0; i < 8; i++) {
             var ghost = ghostTransforms[i];
 
@@ -127,6 +134,8 @@ public class WrapAround1 : MonoBehaviour {
     }
 
     private void UpdateSprites() {
+        if (!ghostsCreated) return;
+
         for(int i = 0; i < 8; i++) {
             ghostRenderers[i].sprite = spriteRenderer.sprite;
             ghostRenderers[i].color = spriteRenderer.color;
@@ -134,11 +143,15 @@ public class WrapAround1 : MonoBehaviour {
     }
 
     private void OnDisable() {
+        if (!ghostsCreated) return;
+
         for (int i = 0; i < 8; i++) {
             ghostTransforms[i].gameObject.SetActive(false);
         }
     }
     private void OnEnable() {
+        if (!ghostsCreated) return;
+
         for (int i = 0; i < 8; i++) {
             ghostTransforms[i].gameObject.SetActive(true);
         }
