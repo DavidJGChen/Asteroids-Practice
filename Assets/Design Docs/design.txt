@@ -1,0 +1,22 @@
+
+Player GameObject:
+    Sprite Renderer
+    Player Script:
+        Input
+        Movement (rb2d)
+        Collision
+        Health
+        ->WrapAround
+
+Asteroid GameObject:
+    Asteroid Script:
+        Movement (rb2d):
+        Collision
+        Health
+        ->WrapAround
+     
+WrapAround Script:
+    public methods:
+        CreateGhosts
+        PositionGhosts
+        SwapGhosts

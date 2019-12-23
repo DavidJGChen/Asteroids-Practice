@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dawid {
-public class Player : WrapAround
+public class Player1 : MonoBehaviour
 {
-    public GameObject bullet;
+    private WrapAround1 wrapAround;
     private Rigidbody2D rb2D;
     private Vector2 velocity;
     private Vector2 velocitySmoothing;
@@ -19,42 +19,45 @@ public class Player : WrapAround
     public int health = 5;
     public float owieTimer;
 
-    protected override void OnAwake() {}
-    protected override void OnStart() {
-        PositionGhosts();
-        rb2D = currObject.GetComponent<Rigidbody2D>();
+    private void Start() {
+        wrapAround = GetComponent<WrapAround1>();
+        wrapAround.CreateGhosts();
+        rb2D = GetComponent<Rigidbody2D>();
         rotateAmount = 0f;
         thrust = 0f;
     }
 
-    protected override void OnUpdate() {
+    private void Update() {
         rotateAmount = Input.GetAxisRaw("Horizontal");
         thrust = Input.GetAxisRaw("Vertical") == 1f ? 1f : 0f;
 
         inControl = rotateAmount != 0 || thrust != 0;
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            var thingy = Instantiate(bullet, currObject.position + currObject.up * 0.25f, Quaternion.identity);
-            thingy.GetComponent<Bullet>().Direction = currObject.up;
+            var bullet = ObjectPooler.SharedInstance.GetPooledObject();
+            bullet.transform.position = this.transform.position + this.transform.up * 0.25f;
+            bullet.transform.rotation = Quaternion.identity;
+            bullet.GetComponent<Bullet1>().Direction = this.transform.up;
+            bullet.SetActive(true);
         }
     }
 
     // Update is called once per frame
-    protected override void OnFixedUpdate()
+    private void FixedUpdate()
     {
-        if (health <=0) {
-            DestroyAll();
+        if (health <= 0) {
+            wrapAround.DestroyGhosts();
             Destroy(gameObject);
         }
         if (owieTimer > 0) {
             owieTimer -= Time.deltaTime;
+            if (owieTimer <= 0) {
+                GetComponent<SpriteRenderer>().color = Color.white;
+            }
         }
-        else {
-            currObject.GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        Vector2 targetVelocity = currObject.up * moveSpeed * thrust;
+        Vector2 targetVelocity = this.transform.up * moveSpeed * thrust;
         rb2D.velocity = Vector2.SmoothDamp(rb2D.velocity, targetVelocity, ref velocitySmoothing, timeToAccel);
-        currObject.Rotate(0f, 0f, -1 * rotateAmount * rotateSpeed * Time.deltaTime);
+        this.transform.Rotate(0f, 0f, -1 * rotateAmount * rotateSpeed * Time.deltaTime);
         if (inControl) {
             rb2D.angularDrag = 0.95f;
         }
@@ -67,7 +70,7 @@ public class Player : WrapAround
     private void TakeDamage() {
         if (owieTimer <= 0){
             health--;
-            currObject.GetComponent<SpriteRenderer>().color = Color.red;
+            GetComponent<SpriteRenderer>().color = Color.red;
             owieTimer = 2f;
         }
     }
