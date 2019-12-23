@@ -34,7 +34,7 @@ public class Player1 : MonoBehaviour
         inControl = rotateAmount != 0 || thrust != 0;
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            var bullet = ObjectPooler.SharedInstance.GetPooledObject();
+            var bullet = ObjectPooler.SharedInstance.GetPooledObject("Bullet");
             bullet.transform.position = this.transform.position + this.transform.up * 0.25f;
             bullet.transform.rotation = Quaternion.identity;
             bullet.GetComponent<Bullet1>().Direction = this.transform.up;

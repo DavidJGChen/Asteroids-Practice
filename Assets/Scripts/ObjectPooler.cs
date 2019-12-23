@@ -3,37 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dawid {
+
+[System.Serializable]
+public class ObjectPoolItem {
+    public GameObject objectToPool;
+    public int amountToPool;
+}
+
 public class ObjectPooler : MonoBehaviour
 {
     public static ObjectPooler SharedInstance;
 
-    public Stack<GameObject> pooledObjects;
-    public GameObject objectToPool;
-    public int amountToPool;
+    public List<ObjectPoolItem> itemsToPool;
+    private Dictionary<string, Stack<GameObject>> pool;
+    private Dictionary<string, int> poolAmounts;
+
     private void Awake() {
         SharedInstance = this;
-        pooledObjects = new Stack<GameObject>();
+        pool = new Dictionary<string, Stack<GameObject>>();
+        poolAmounts = new Dictionary<string, int>();
     }
     private void Start() {
-        for (int i = 0; i < amountToPool; i++) {
-            var obj = Instantiate(objectToPool);
-            obj.SetActive(false);
-            pooledObjects.Push(obj);
+        foreach (var item in itemsToPool) {
+            var poolStack = new Stack<GameObject>();
+            for (int i = 0; i < item.amountToPool; i++) {
+                var obj = Instantiate(item.objectToPool);
+                obj.SetActive(false);
+                poolStack.Push(obj);
+            }
+            pool.Add(item.objectToPool.tag, poolStack);
+            poolAmounts.Add(item.objectToPool.tag, item.amountToPool);
         }
     }
 
-    public GameObject GetPooledObject() {
-        if (pooledObjects.Count > 0 && !pooledObjects.Peek().activeInHierarchy) {
-            return pooledObjects.Pop();
+    public GameObject GetPooledObject(string tag) {
+        Stack<GameObject> poolStack;
+        if (!pool.TryGetValue(tag, out poolStack)) return null;
+        if (poolStack.Count > 0 && !poolStack.Peek().activeInHierarchy) {
+            return poolStack.Pop();
         }
-        var obj = Instantiate(objectToPool);
-        obj.SetActive(false);
-        return obj;
+        foreach (var item in itemsToPool) {
+            if (item.objectToPool.tag == tag) {
+                var obj = Instantiate(item.objectToPool);
+                obj.SetActive(false);
+                return obj;
+            }
+        }
+        return null;
     }
     public void ReturnToPool(GameObject obj) {
-        if (pooledObjects.Count < amountToPool) {
+        if (obj == null) return; // throw exception TODO
+        Stack<GameObject> poolStack;
+        if (!pool.TryGetValue(obj.tag, out poolStack)) Destroy(obj);
+        if (poolStack.Count < poolAmounts[obj.tag]) {
             obj.SetActive(false);
-            pooledObjects.Push(obj);
+            poolStack.Push(obj);
         }
         else {
             Destroy(obj);
