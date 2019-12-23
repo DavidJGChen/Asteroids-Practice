@@ -78,6 +78,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ghostPrefab: {fileID: 4302908327366370133, guid: d24f3b866f0474f70a1f91eb8304af4e,
     type: 3}
+  ghostContainer: {fileID: 4091354913575148227, guid: d6b0d63e147a04818b58376cbfb9440b,
+    type: 3}
 --- !u!50 &3891377647902487821
 Rigidbody2D:
   serializedVersion: 4

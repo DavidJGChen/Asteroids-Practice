@@ -149,8 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd9bd6468fa0c4de285a0a6d44db22fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 1521832828427171789, guid: f01eb6889004941fc875262d30f58b1a, type: 3}
   moveSpeed: 8
+  fireForce: 20
   rotateSpeed: 360
   timeToAccel: 1
   health: 5

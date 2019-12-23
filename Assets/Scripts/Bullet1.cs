@@ -13,10 +13,8 @@ public class Bullet1 : MonoBehaviour
     private void Awake() {
         wrapAround = GetComponent<WrapAround1>();
         wrapAround.CreateGhosts();
-        rb2D = GetComponent<Rigidbody2D>();
     }
     private void OnEnable() {
-        rb2D.AddForce(direction * moveSpeed, ForceMode2D.Impulse);
         timeToDeath = 0.5f;
     }
 
@@ -24,13 +22,6 @@ public class Bullet1 : MonoBehaviour
         timeToDeath -= Time.deltaTime;
         if (timeToDeath < 0) {
             ObjectPooler.SharedInstance.ReturnToPool(gameObject);
-        }
-    }
-
-    public Vector2 Direction {
-        get { return direction; }
-        set { 
-            direction = value; 
         }
     }
 }
