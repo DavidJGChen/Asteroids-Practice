@@ -5,6 +5,9 @@ using UnityEngine;
 namespace Dawid {
 public class Player1 : MonoBehaviour
 {
+    public Ship[] ships;
+    private int currentShip;
+
     private WrapAround1 wrapAround;
     private Rigidbody2D rb2D;
     private Vector2 velocity;
@@ -12,13 +15,16 @@ public class Player1 : MonoBehaviour
     private float angularVelocitySmoothing;
     private float rotateAmount;
     private float thrust;
-    public float moveSpeed = 8f;
+    private float moveSpeed;
     public float fireForce = 20f;
-    public float rotateSpeed = 360f;
-    public float timeToAccel = 1f;
+    private float rotateSpeed;
+    private float timeToAccel;
     private bool inControl;
-    public int health = 5;
-    public float owieTimer;
+    private int health;
+    private int currHealth;
+    private float owieTimer;
+
+    private bool gameStarted = false;
 
     private void Awake() {
         wrapAround = GetComponent<WrapAround1>();
@@ -26,9 +32,13 @@ public class Player1 : MonoBehaviour
     }
 
     private void Start() {
+        UpdateShip(0);
+        currentShip = 0;
+
         wrapAround.CreateGhosts();
         rotateAmount = 0f;
         thrust = 0f;
+        gameStarted = true;
     }
 
     private void Update() {
@@ -46,12 +56,16 @@ public class Player1 : MonoBehaviour
 
             bullet.GetComponent<Rigidbody2D>().AddForce(this.transform.up * fireForce, ForceMode2D.Impulse);
         }
+        if (Input.GetKeyDown(KeyCode.Tab)) {
+            currentShip = (currentShip + 1) % ships.Length;
+            UpdateShip(currentShip);
+        }
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
-        if (health <= 0) {
+        if (currHealth <= 0) {
             wrapAround.DestroyGhosts();
             Destroy(gameObject);
         }
@@ -73,9 +87,24 @@ public class Player1 : MonoBehaviour
         if (Mathf.Abs(rb2D.angularVelocity) < 0.5) rb2D.angularVelocity = 0;
     }
 
+    private void UpdateShip(int i) {
+        GetComponent<SpriteRenderer>().sprite = ships[i].shipSprite;
+        moveSpeed = ships[i].moveSpeed;
+        rb2D.mass = ships[i].mass;
+        rotateSpeed = ships[i].rotateSpeed;
+        timeToAccel = ships[i].timeToAccel;
+        health = ships[i].health;
+        if (!gameStarted) {
+            currHealth = health;
+        }
+
+        Destroy(GetComponent<PolygonCollider2D>());
+        gameObject.AddComponent<PolygonCollider2D>();
+    }
+
     private void TakeDamage() {
         if (owieTimer <= 0){
-            health--;
+            currHealth--;
             GetComponent<SpriteRenderer>().color = Color.red;
             owieTimer = 2f;
         }
