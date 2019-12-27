@@ -8,11 +8,13 @@ public class Game : MonoBehaviour
     float newAsteroidTime = 5f;
     float timer;
     int numAsteroids = 5;
-    public GameObject asteroid;
+    public GameObject asteroidPrefab;
     // Start is called before the first frame update
     void Start()
     {
         timer = 0;
+
+        ObjectPooler.SharedInstance.CreatePool(asteroidPrefab, 10);
     }
 
     // Update is called once per frame
@@ -23,7 +25,10 @@ public class Game : MonoBehaviour
         }
         else {
             if (numAsteroids > 0) {
-                Instantiate(asteroid, transform);
+                var asteroid = ObjectPooler.SharedInstance.GetPooledObject(asteroidPrefab);
+                asteroid.SetActive(true);
+                asteroid.SendMessage("HideAsteroid");
+                asteroid.SendMessage("ApplyRandomForce");
                 timer = newAsteroidTime;
                 numAsteroids--;
             }

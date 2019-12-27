@@ -2,7 +2,7 @@
 
 namespace Dawid {
 [CreateAssetMenu(menuName="Ships")]
-public class Ship : ScriptableObject
+public class ShipData : ScriptableObject
 {
     public string shipName = "New Ship";
     public Sprite shipSprite;
@@ -11,6 +11,6 @@ public class Ship : ScriptableObject
     public float timeToAccel;
     public float mass;
     public int health;
-    public Projectile defaultProjectile;
+    public ProjectileData defaultProjectile;
 }
 }

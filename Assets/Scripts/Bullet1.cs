@@ -8,6 +8,7 @@ public class Bullet1 : MonoBehaviour
     private WrapAround1 wrapAround;
     private Rigidbody2D rb2D;
     private SpriteRenderer spriteRenderer;
+    private ProjectileData currProjectile;
     public float timeToDeath;
     public float fireForce;
     private float deathTimer;
@@ -15,10 +16,12 @@ public class Bullet1 : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         wrapAround = GetComponent<WrapAround1>();
-        wrapAround.CreateGhosts();
 
         rb2D = GetComponent<Rigidbody2D>();
+
+        wrapAround.CreateGhosts();
     }
+
     private void OnEnable() {
         deathTimer = timeToDeath;
     }
@@ -35,19 +38,26 @@ public class Bullet1 : MonoBehaviour
         this.transform.rotation = rot;
     }
 
-    public void ChangeToProjectile(Projectile proj) {
-        UpdateProjectile(proj);
+    public void ChangeToProjectile(ProjectileData proj) {
+        if (currProjectile == null || proj.projectileName != currProjectile.projectileName) {
+            UpdateProjectile(proj);
+        }
     }
 
     public void Shoot(Vector2 direction) {
         rb2D.AddForce(direction * fireForce, ForceMode2D.Impulse);
     }
 
-    private void UpdateProjectile(Projectile proj) {
+    private void UpdateProjectile(ProjectileData proj) {
+        currProjectile = proj;
+
         spriteRenderer.sprite = proj.projectileSprite;
         rb2D.mass = proj.mass;
         timeToDeath = proj.timeToDeath;
         fireForce = proj.fireForce;
+
+        Destroy(GetComponent<PolygonCollider2D>());
+        gameObject.AddComponent<PolygonCollider2D>();
     }
 }
 }

@@ -10,22 +10,20 @@ public class WrapAround1 : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     public GameObject ghostPrefab;
 
-    private Transform[] ghostTransforms;
-    private SpriteRenderer[] ghostRenderers;
+    private Transform[] ghostTransforms = new Transform[8];
+    private SpriteRenderer[] ghostRenderers = new SpriteRenderer[8];
     private bool ghostsCreated = false;
+    private bool revealed;
     private void Awake() {
-        ghostTransforms = new Transform[8];
-        ghostRenderers = new SpriteRenderer[8];
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
     private void Start() {
-        RecalculateCameraBounds();    
+        RecalculateCameraBounds();
     }
     private void FixedUpdate() {
         PositionGhosts();
         SwapPositions();
     }
-
     private void LateUpdate() {
         UpdateSprites();    
     }
@@ -41,8 +39,10 @@ public class WrapAround1 : MonoBehaviour {
 
         PositionGhosts();
     }
-    public void CreateGhosts() {
+    public void CreateGhosts(bool revealObject = true) {
+
         var container = GhostContainer.SharedInstance;
+
         for(int i = 0; i < 8; i++) {
             var obj = Instantiate(ghostPrefab, Vector3.zero, Quaternion.identity);
             ghostTransforms[i] = obj.transform;
@@ -51,9 +51,10 @@ public class WrapAround1 : MonoBehaviour {
         }
 
         ghostsCreated = true;
+        revealed = revealObject;
+        if (!revealObject) HideObject();
 
         PositionGhosts();
-        UpdateSprites();
     }
     public void DestroyGhosts() {
         if (!ghostsCreated) return;
@@ -64,6 +65,9 @@ public class WrapAround1 : MonoBehaviour {
 
         ghostsCreated = false;
     }
+    public void HideObject() {
+        SetReveal(false);
+    } 
     #endregion
 
     private void PositionGhosts() {
@@ -130,6 +134,8 @@ public class WrapAround1 : MonoBehaviour {
                 
                 this.transform.position = ghost.position;
 
+                if (!revealed) SetReveal(true);
+
                 PositionGhosts();
     
                 break;
@@ -160,6 +166,12 @@ public class WrapAround1 : MonoBehaviour {
         for (int i = 0; i < 8; i++) {
             ghostTransforms[i].gameObject.SetActive(true);
         }
+    }
+
+    private void SetReveal(bool value) {
+        revealed = value;
+        spriteRenderer.enabled = value;
+        GetComponent<Collider2D>().enabled = value;
     }
 }
 }

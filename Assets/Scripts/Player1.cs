@@ -5,13 +5,14 @@ using UnityEngine;
 namespace Dawid {
 public class Player1 : MonoBehaviour
 {
-    public Ship[] ships;
-    private int currentShip;
+    public ShipData[] ships;
+    private int currShip;
     public GameObject projectilePrefab;
-    private Projectile currProjectile;
+    private ProjectileData currProjectile;
 
     private WrapAround1 wrapAround;
     private Rigidbody2D rb2D;
+    private SpriteRenderer spriteRenderer;
     private Vector2 velocity;
     private Vector2 velocitySmoothing;
     private float angularVelocitySmoothing;
@@ -29,14 +30,17 @@ public class Player1 : MonoBehaviour
 
     private void Awake() {
         wrapAround = GetComponent<WrapAround1>();
+
         rb2D = GetComponent<Rigidbody2D>();
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start() {
         UpdateShip(0);
-        currentShip = 0;
+        currShip = 0;
 
-        ObjectPooler.SharedInstance.CreatePool(projectilePrefab, 3);
+        ObjectPooler.SharedInstance.CreatePool(projectilePrefab, 3); // Create Projectiles
 
         wrapAround.CreateGhosts();
         rotateAmount = 0f;
@@ -54,8 +58,8 @@ public class Player1 : MonoBehaviour
             Shoot();
         }
         if (Input.GetKeyDown(KeyCode.Tab)) {
-            currentShip = (currentShip + 1) % ships.Length;
-            UpdateShip(currentShip);
+            currShip = (currShip + 1) % ships.Length;
+            UpdateShip(currShip);
         }
     }
 
@@ -69,7 +73,7 @@ public class Player1 : MonoBehaviour
         if (owieTimer > 0) {
             owieTimer -= Time.deltaTime;
             if (owieTimer <= 0) {
-                GetComponent<SpriteRenderer>().color = Color.white;
+                spriteRenderer.color = Color.white;
             }
         }
         Vector2 targetVelocity = this.transform.up * moveSpeed * thrust;
@@ -85,7 +89,7 @@ public class Player1 : MonoBehaviour
     }
 
     private void UpdateShip(int i) {
-        GetComponent<SpriteRenderer>().sprite = ships[i].shipSprite;
+        spriteRenderer.sprite = ships[i].shipSprite;
         moveSpeed = ships[i].moveSpeed;
         rb2D.mass = ships[i].mass;
         rotateSpeed = ships[i].rotateSpeed;
@@ -101,7 +105,7 @@ public class Player1 : MonoBehaviour
         UpdateProjectile(ships[i].defaultProjectile);
     }
 
-    private void UpdateProjectile(Projectile proj) {
+    private void UpdateProjectile(ProjectileData proj) {
         currProjectile = proj;
     }
 
@@ -124,8 +128,14 @@ public class Player1 : MonoBehaviour
     private void TakeDamage() {
         if (owieTimer <= 0){
             currHealth--;
-            GetComponent<SpriteRenderer>().color = Color.red;
+            spriteRenderer.color = Color.red;
             owieTimer = 2f;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Asteroid")) {
+            TakeDamage();
         }
     }
 }

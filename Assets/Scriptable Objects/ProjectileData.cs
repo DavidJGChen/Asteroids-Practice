@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Dawid {
 [CreateAssetMenu(menuName="Projectile")]
-public class Projectile : ScriptableObject
+public class ProjectileData : ScriptableObject
 {
     public string projectileName = "New Projectile";
     public Sprite projectileSprite;
