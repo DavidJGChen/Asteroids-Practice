@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace Dawid {
 public class Game : MonoBehaviour
 {
     float newAsteroidTime = 5f;
@@ -32,4 +33,5 @@ public class Game : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.LoadScene("Scene1");
         }
     }
+}
 }

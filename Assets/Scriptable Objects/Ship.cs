@@ -11,5 +11,6 @@ public class Ship : ScriptableObject
     public float timeToAccel;
     public float mass;
     public int health;
+    public Projectile defaultProjectile;
 }
 }

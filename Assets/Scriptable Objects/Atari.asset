@@ -19,3 +19,4 @@ MonoBehaviour:
   timeToAccel: 1
   mass: 50
   health: 4
+  defaultProjectile: {fileID: 11400000, guid: 277c197efe75447efbf1286c51757cae, type: 2}

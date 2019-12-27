@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3891377647902487821}
   - component: {fileID: 857667824788424323}
   - component: {fileID: -1964418424308542776}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet1
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -52,7 +52,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.0625, y: 0.0625}
+    oldSize: {x: 0.5, y: 0.5}
     newSize: {x: 0.0625, y: 0.0625}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -77,8 +77,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ghostPrefab: {fileID: 4302908327366370133, guid: d24f3b866f0474f70a1f91eb8304af4e,
-    type: 3}
-  ghostContainer: {fileID: 4091354913575148227, guid: d6b0d63e147a04818b58376cbfb9440b,
     type: 3}
 --- !u!50 &3891377647902487821
 Rigidbody2D:
@@ -139,7 +137,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 53fb27e34969b4823acc7c7e6d85ecc6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2d5af88a1fb8c44b8a50ecbd07c55808, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -162,4 +160,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90830e1e5b3f4cffa1dbfcddad8c4c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 20
+  timeToDeath: 0
+  fireForce: 0

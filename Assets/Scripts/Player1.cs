@@ -7,6 +7,8 @@ public class Player1 : MonoBehaviour
 {
     public Ship[] ships;
     private int currentShip;
+    public GameObject projectilePrefab;
+    private Projectile currProjectile;
 
     private WrapAround1 wrapAround;
     private Rigidbody2D rb2D;
@@ -16,7 +18,6 @@ public class Player1 : MonoBehaviour
     private float rotateAmount;
     private float thrust;
     private float moveSpeed;
-    public float fireForce = 20f;
     private float rotateSpeed;
     private float timeToAccel;
     private bool inControl;
@@ -35,6 +36,8 @@ public class Player1 : MonoBehaviour
         UpdateShip(0);
         currentShip = 0;
 
+        ObjectPooler.SharedInstance.CreatePool(projectilePrefab, 3);
+
         wrapAround.CreateGhosts();
         rotateAmount = 0f;
         thrust = 0f;
@@ -48,13 +51,7 @@ public class Player1 : MonoBehaviour
         inControl = rotateAmount != 0 || thrust != 0;
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            var bullet = ObjectPooler.SharedInstance.GetPooledObject("Bullet");
-            var bulletSpawn = this.transform.position + this.transform.up * 0.25f;
-            bullet.transform.position = bulletSpawn;
-            bullet.transform.rotation = Quaternion.identity;
-            bullet.SetActive(true);
-
-            bullet.GetComponent<Rigidbody2D>().AddForce(this.transform.up * fireForce, ForceMode2D.Impulse);
+            Shoot();
         }
         if (Input.GetKeyDown(KeyCode.Tab)) {
             currentShip = (currentShip + 1) % ships.Length;
@@ -100,6 +97,28 @@ public class Player1 : MonoBehaviour
 
         Destroy(GetComponent<PolygonCollider2D>());
         gameObject.AddComponent<PolygonCollider2D>();
+
+        UpdateProjectile(ships[i].defaultProjectile);
+    }
+
+    private void UpdateProjectile(Projectile proj) {
+        currProjectile = proj;
+    }
+
+    private void Shoot() {
+        var projInstance = ObjectPooler.SharedInstance.GetPooledObject(projectilePrefab);
+
+        var projScript = projInstance.GetComponent<Bullet1>();
+
+        projScript.ChangeToProjectile(currProjectile);
+
+        var projectileSpawn = this.transform.position + this.transform.up * 0.25f;
+
+        projScript.SetStartingOrientation(projectileSpawn, this.transform.rotation);
+
+        projInstance.SetActive(true);
+
+        projScript.Shoot(this.transform.up);
     }
 
     private void TakeDamage() {
