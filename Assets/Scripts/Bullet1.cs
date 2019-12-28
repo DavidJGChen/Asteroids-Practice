@@ -59,5 +59,11 @@ public class Bullet1 : MonoBehaviour
         Destroy(GetComponent<PolygonCollider2D>());
         gameObject.AddComponent<PolygonCollider2D>();
     }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Asteroid")) {
+            ObjectPooler.SharedInstance.ReturnToPool(gameObject);
+        }
+    }
 }
 }

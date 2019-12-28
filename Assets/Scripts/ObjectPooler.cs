@@ -18,6 +18,7 @@ public class ObjectPooler : MonoBehaviour
 
     private Dictionary<string, Stack<GameObject>> pool = new Dictionary<string, Stack<GameObject>>();
     private Dictionary<string, int> poolAmounts = new Dictionary<string, int>();
+    private Dictionary<string, GameObject> prefabDict = new Dictionary<string, GameObject>();
     private GameObject overflowPool;
     
     private void Start() {
@@ -43,7 +44,18 @@ public class ObjectPooler : MonoBehaviour
             }
 
             poolAmounts.Add(key, amountToPool);
+
+            prefabDict.Add(key, prefab);
         }
+    }
+
+    public GameObject GetPooledObject(string tag) {
+        GameObject prefab;
+        prefabDict.TryGetValue(tag, out prefab);
+        if (prefab != null) {
+            return GetPooledObject(prefab);
+        }
+        return null;
     }
 
     public GameObject GetPooledObject(GameObject prefab) {
