@@ -136,6 +136,7 @@ public class Player1 : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.CompareTag("Asteroid")) {
             TakeDamage();
+            print("wow");
         }
     }
 }

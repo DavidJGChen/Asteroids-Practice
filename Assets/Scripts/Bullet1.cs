@@ -12,6 +12,7 @@ public class Bullet1 : MonoBehaviour
     public float timeToDeath;
     public float fireForce;
     private float deathTimer;
+    private bool spent;
     private void Awake() {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -24,6 +25,7 @@ public class Bullet1 : MonoBehaviour
 
     private void OnEnable() {
         deathTimer = timeToDeath;
+        spent = false;
     }
 
     private void FixedUpdate() {
@@ -61,8 +63,9 @@ public class Bullet1 : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Asteroid")) {
-            ObjectPooler.SharedInstance.ReturnToPool(gameObject);
+        if (!spent && other.gameObject.CompareTag("Asteroid")) {
+            other.gameObject.SendMessage("TakeDamage");
+            spent = true;
         }
     }
 }

@@ -17,14 +17,23 @@ public class Asteroid : MonoBehaviour
     private AsteroidData nextAsteroid;
     private int splitAmount;
 
+    public static void BigBigAsteroid() {
+        print("wow2");
+        var asteroid = ObjectPooler.SharedInstance.GetPooledObject("Asteroid");
+        var asteroidScript = asteroid.GetComponent<Asteroid>();
+        asteroidScript.UpdateAsteroid(asteroidScript.defaultAsteroid);
+        asteroidScript.SetStartingOrientation(Vector2.zero, Quaternion.identity);
+        asteroid.SetActive(true);
+        asteroidScript.HideAsteroid();
+        asteroidScript.ApplyRandomForce();
+    }
+
     private void Awake() {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         wrapAround = GetComponent<WrapAround1>();
 
         rb2D = GetComponent<Rigidbody2D>();
-
-        UpdateAsteroid(defaultAsteroid);
 
         wrapAround.CreateGhosts();
     }
@@ -68,7 +77,7 @@ public class Asteroid : MonoBehaviour
         rb2D.AddForce(randomVector * Random.Range(minForce, maxForce), ForceMode2D.Impulse);
     }
 
-    private void TakeBulletDamage() {
+    private void TakeDamage() {
         currHealth--;
     }
 
@@ -101,11 +110,8 @@ public class Asteroid : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Bullet")) {
-            TakeBulletDamage();
-        }
         if (other.gameObject.CompareTag("Ship")) {
-            TakeBulletDamage();
+            TakeDamage();
         }
     }
 }

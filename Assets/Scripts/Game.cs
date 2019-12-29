@@ -25,10 +25,7 @@ public class Game : MonoBehaviour
         }
         else {
             if (numAsteroids > 0) {
-                var asteroid = ObjectPooler.SharedInstance.GetPooledObject(asteroidPrefab);
-                asteroid.SetActive(true);
-                asteroid.SendMessage("HideAsteroid");
-                asteroid.SendMessage("ApplyRandomForce");
+                Asteroid.BigBigAsteroid();
                 timer = newAsteroidTime;
                 numAsteroids--;
             }

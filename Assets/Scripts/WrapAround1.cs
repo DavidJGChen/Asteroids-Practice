@@ -21,11 +21,13 @@ public class WrapAround1 : MonoBehaviour {
         RecalculateCameraBounds();
     }
     private void FixedUpdate() {
+        if (!revealed) GetComponent<Collider2D>().enabled = false;
         PositionGhosts();
         SwapPositions();
     }
     private void LateUpdate() {
-        UpdateSprites();    
+        UpdateSprites();
+        var debug1 = GetComponent<Collider2D>().enabled;   
     }
     #region Public Methods
     public void RecalculateCameraBounds() {
@@ -134,7 +136,9 @@ public class WrapAround1 : MonoBehaviour {
                 
                 this.transform.position = ghost.position;
 
-                if (!revealed) SetReveal(true);
+                if (!revealed) {
+                    SetReveal(true);
+                }
 
                 PositionGhosts();
     
@@ -169,6 +173,7 @@ public class WrapAround1 : MonoBehaviour {
     }
 
     private void SetReveal(bool value) {
+        print("HEY" + value);
         revealed = value;
         spriteRenderer.enabled = value;
         GetComponent<Collider2D>().enabled = value;
