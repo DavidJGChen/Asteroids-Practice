@@ -26,6 +26,7 @@ public class Bullet1 : MonoBehaviour
     private void OnEnable() {
         deathTimer = timeToDeath;
         spent = false;
+        spriteRenderer.color = Color.white;
     }
 
     private void FixedUpdate() {
@@ -66,6 +67,7 @@ public class Bullet1 : MonoBehaviour
         if (!spent && other.gameObject.CompareTag("Asteroid")) {
             other.gameObject.SendMessage("TakeDamage");
             spent = true;
+            spriteRenderer.color = Color.gray;
         }
     }
 }

@@ -43,6 +43,9 @@ public class Asteroid : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        if (rb2D.velocity.magnitude < 2f) {
+            rb2D.AddForce(rb2D.velocity.normalized * minForce * 0.05f, ForceMode2D.Impulse);
+        }
         if (currHealth <= 0) {
             OnDestruction();
         }
@@ -92,13 +95,17 @@ public class Asteroid : MonoBehaviour
     private void CreateNewAsteroids() {
         Vector2[] offsets;
         CalculateNextAsteroidOffset(0.5f, out offsets);
+
+        var forceOffset = rb2D.velocity.normalized;
+
         for (int i = 0; i < splitAmount; i++) {
             var splitAsteroid = ObjectPooler.SharedInstance.GetPooledObject(gameObject.tag);
             var splitAsteroidScript = splitAsteroid.GetComponent<Asteroid>();
             splitAsteroid.SetActive(true);
             splitAsteroidScript.UpdateAsteroid(nextAsteroid);
             splitAsteroidScript.SetStartingOrientation(new Vector2(this.transform.position.x, this.transform.position.y) + offsets[i], this.transform.rotation);
-            var randomVector = offsets[i].normalized * Random.Range(nextAsteroid.minForce, nextAsteroid.maxForce);
+            var randomVector = (offsets[i].normalized) * Random.Range(nextAsteroid.minForce, nextAsteroid.maxForce);
+            randomVector += forceOffset * rb2D.velocity.magnitude;
             splitAsteroid.GetComponent<Rigidbody2D>().AddForce(randomVector, ForceMode2D.Impulse);
         }
     }
