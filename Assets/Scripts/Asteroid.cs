@@ -44,7 +44,8 @@ public class Asteroid : MonoBehaviour
 
     private void FixedUpdate() {
         if (rb2D.velocity.magnitude < 2f) {
-            rb2D.AddForce(rb2D.velocity.normalized * minForce * 0.05f, ForceMode2D.Impulse);
+            // rb2D.AddForce(rb2D.velocity.normalized * minForce * 0.05f, ForceMode2D.Impulse);
+            rb2D.velocity *= 1.1f;
         }
         if (currHealth <= 0) {
             OnDestruction();
@@ -88,6 +89,8 @@ public class Asteroid : MonoBehaviour
         if (nextAsteroid != null && splitAmount > 0) {
             CreateNewAsteroids();
         }
+
+        ExplosionManager.Manager.Shake(rb2D.mass * 0.01f * 0.5f, rb2D.mass * 0.01f * 0.25f);
 
         ObjectPooler.SharedInstance.ReturnToPool(gameObject);
     }

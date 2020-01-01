@@ -69,6 +69,7 @@ public class Player1 : MonoBehaviour
         if (currHealth <= 0) {
             wrapAround.DestroyGhosts();
             Destroy(gameObject);
+            ExplosionManager.Manager.Shake(1f, 2f);
         }
         if (owieTimer > 0) {
             owieTimer -= Time.deltaTime;
@@ -131,6 +132,7 @@ public class Player1 : MonoBehaviour
             currHealth--;
             spriteRenderer.color = Color.red;
             owieTimer = 2f;
+            ExplosionManager.Manager.Shake(0.1f, 0.2f);
         }
     }
 
