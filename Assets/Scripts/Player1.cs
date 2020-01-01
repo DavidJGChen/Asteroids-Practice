@@ -78,12 +78,13 @@ public class Player1 : MonoBehaviour
         }
         Vector2 targetVelocity = this.transform.up * moveSpeed * thrust;
         rb2D.velocity = Vector2.SmoothDamp(rb2D.velocity, targetVelocity, ref velocitySmoothing, timeToAccel);
-        this.transform.Rotate(0f, 0f, -1 * rotateAmount * rotateSpeed * Time.deltaTime);
-        if (inControl) {
-            rb2D.angularDrag = 0.95f;
+
+        if (inControl && owieTimer <= 0) {
+            this.transform.Rotate(0f, 0f, -1 * rotateAmount * rotateSpeed * Time.deltaTime);
+            rb2D.angularVelocity *= 0.9f;
         }
         else {
-            rb2D.angularDrag = 0.4f;
+            this.transform.Rotate(0f, 0f, -1 * rotateAmount * rotateSpeed * Time.deltaTime);
         }
         if (Mathf.Abs(rb2D.angularVelocity) < 0.5) rb2D.angularVelocity = 0;
     }

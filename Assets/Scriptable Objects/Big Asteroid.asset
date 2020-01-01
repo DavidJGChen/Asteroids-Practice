@@ -16,7 +16,7 @@ MonoBehaviour:
   asteroidSprites:
   - {fileID: -2244543243340742949, guid: 9f93ce60b4b3048d897f0e6f6b9f8a7c, type: 3}
   - {fileID: 2619520171403366046, guid: 9f93ce60b4b3048d897f0e6f6b9f8a7c, type: 3}
-  minForce: 100
+  minForce: 200
   maxForce: 300
   mass: 100
   health: 5

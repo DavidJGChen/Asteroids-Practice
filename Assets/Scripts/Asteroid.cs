@@ -83,26 +83,30 @@ public class Asteroid : MonoBehaviour
 
     private void OnDestruction() {
         if (nextAsteroid != null && splitAmount > 0) {
-            Vector2[] offsets;
-            CalculateNextAsteroidOffset(0.25f, out offsets);
-            for (int i = 0; i < splitAmount; i++) {
-                var splitAsteroid = ObjectPooler.SharedInstance.GetPooledObject(gameObject.tag);
-                var splitAsteroidScript = splitAsteroid.GetComponent<Asteroid>();
-                splitAsteroid.SetActive(true);
-                splitAsteroidScript.UpdateAsteroid(nextAsteroid);
-                splitAsteroidScript.SetStartingOrientation(new Vector2(this.transform.position.x, this.transform.position.y) + offsets[i], this.transform.rotation);
-                var randomVector = Random.insideUnitCircle.normalized * Random.Range(nextAsteroid.minForce, nextAsteroid.minForce);
-                splitAsteroid.GetComponent<Rigidbody2D>().AddForce(randomVector, ForceMode2D.Impulse);
-            }
+            CreateNewAsteroids();
         }
 
         ObjectPooler.SharedInstance.ReturnToPool(gameObject);
     }
 
+    private void CreateNewAsteroids() {
+        Vector2[] offsets;
+        CalculateNextAsteroidOffset(0.5f, out offsets);
+        for (int i = 0; i < splitAmount; i++) {
+            var splitAsteroid = ObjectPooler.SharedInstance.GetPooledObject(gameObject.tag);
+            var splitAsteroidScript = splitAsteroid.GetComponent<Asteroid>();
+            splitAsteroid.SetActive(true);
+            splitAsteroidScript.UpdateAsteroid(nextAsteroid);
+            splitAsteroidScript.SetStartingOrientation(new Vector2(this.transform.position.x, this.transform.position.y) + offsets[i], this.transform.rotation);
+            var randomVector = offsets[i].normalized * Random.Range(nextAsteroid.minForce, nextAsteroid.maxForce);
+            splitAsteroid.GetComponent<Rigidbody2D>().AddForce(randomVector, ForceMode2D.Impulse);
+        }
+    }
+
     private void CalculateNextAsteroidOffset(float magnitude, out Vector2[] offsets) {
         offsets = new Vector2[splitAmount];
         float incrementalAngle = Mathf.PI * 2 * 1 / splitAmount;
-        float angle = 0f;
+        float angle = this.transform.eulerAngles.z;
         for (int i = 0; i < splitAmount; i++) {
             offsets[i] = new Vector2(Mathf.Cos(angle) * magnitude, Mathf.Sin(angle) * magnitude);
             angle += incrementalAngle;

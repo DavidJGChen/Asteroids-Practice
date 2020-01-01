@@ -18,8 +18,8 @@ MonoBehaviour:
   - {fileID: -1929366605773643366, guid: 9f93ce60b4b3048d897f0e6f6b9f8a7c, type: 3}
   - {fileID: 8961905289132254908, guid: 9f93ce60b4b3048d897f0e6f6b9f8a7c, type: 3}
   - {fileID: 5910077189670250263, guid: 9f93ce60b4b3048d897f0e6f6b9f8a7c, type: 3}
-  minForce: 100
-  maxForce: 200
+  minForce: 75
+  maxForce: 125
   mass: 30
   health: 2
   splitAmount: 2

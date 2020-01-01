@@ -21,6 +21,8 @@ MonoBehaviour:
   - {fileID: 1031131993308064179, guid: 9f93ce60b4b3048d897f0e6f6b9f8a7c, type: 3}
   - {fileID: 750050500109240725, guid: 9f93ce60b4b3048d897f0e6f6b9f8a7c, type: 3}
   minForce: 50
-  maxForce: 150
+  maxForce: 75
   mass: 15
   health: 1
+  splitAmount: 0
+  nextAsteroid: {fileID: 0}
