@@ -6,7 +6,6 @@ namespace Dawid {
 public class ObjectPooler : MonoBehaviour
 {
     private static ObjectPooler sharedInstance;
-
     public static ObjectPooler SharedInstance {
         get {
             if (sharedInstance == null) {
